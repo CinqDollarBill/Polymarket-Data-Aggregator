@@ -90,8 +90,7 @@ def main():
     if not event_data:
         print("❌ No event data available. Exiting.")
         return
-    
-    # TODO: REVIEW - Original code used last event ID only. This uses first event.
+
     primary_event = event_data[0] if isinstance(event_data, list) else event_data
     markets = primary_event.get('markets', [])
     
