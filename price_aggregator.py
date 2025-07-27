@@ -1,3 +1,10 @@
+"""
+ * @author  Bill Chen
+ * @date    July 27th, 2025
+ * @brief   This program helps fetch pricing Data from Polymarkets Gamma API and then exports it to a CSV
+"""
+
+
 import requests
 from datetime import datetime, timezone
 import json
