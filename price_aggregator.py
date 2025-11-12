@@ -34,12 +34,12 @@ def process_market(market, index):
     token_id_str = market.get('clobTokenIds', 'N/A')
     question = market.get('question', f'Market {index+1}')
     
-    print(f"\n📊 Market {index + 1}")
-    print(f"❓ ID: {token_id_str}")
-    print(f"❓ Question: {question}")
-    print(f"💰 Outcome Prices: {market.get('outcomePrices', 'N/A')}")
-    print(f"📈 Best Bid: {market.get('bestBid', 'N/A')}")
-    print(f"📉 Best Ask: {market.get('bestAsk', 'N/A')}")
+    print(f"\nMarket {index + 1}")
+    print(f"ID: {token_id_str}")
+    print(f"Question: {question}")
+    print(f"Outcome Prices: {market.get('outcomePrices', 'N/A')}")
+    print(f"Best Bid: {market.get('bestBid', 'N/A')}")
+    print(f"Best Ask: {market.get('bestAsk', 'N/A')}")
     print("─" * 50)
 
     try:
@@ -47,7 +47,7 @@ def process_market(market, index):
         first_token_id = int(token_ids[0])
         return question, fetch_historical_prices(first_token_id)
     except (json.JSONDecodeError, IndexError, ValueError) as e:
-        print(f"⚠️ Error processing token ID: {e}")
+        print(f"Error processing token ID: {e}")
         return question, None
 
 def fetch_historical_prices(token_id):
@@ -63,7 +63,7 @@ def fetch_historical_prices(token_id):
         response.raise_for_status()
         return response.json().get("history", [])
     except requests.exceptions.RequestException as e:
-        print(f"⚠️ Error fetching historical prices: {e}")
+        print(f"Error fetching historical prices: {e}")
         return []
 
 def convert_to_eastern(utc_timestamp):
@@ -86,23 +86,23 @@ def export_combined_csv(filename, all_data, questions):
                 row.append(all_data[timestamp].get(question, ''))
             writer.writerow(row)
     
-    print(f"✅ Combined CSV exported to {filename}")
+    print(f"Combined CSV exported to {filename}")
 
 def main():
     """Main function to execute the market data processing pipeline."""
-    print("🌟 Elon Tweet Prediction Markets 🌟")
+    print("Market")
     print("=" * 50 + "\n")
     
     event_data = fetch_event_data(API_URL)
     if not event_data:
-        print("❌ No event data available. Exiting.")
+        print("No event data available. Exiting.")
         return
 
     primary_event = event_data[0] if isinstance(event_data, list) else event_data
     markets = primary_event.get('markets', [])
     
     if not markets:
-        print("❌ No markets found in event data.")
+        print("No markets found in event data.")
         return
     
     combined_data = defaultdict(dict)
@@ -113,11 +113,11 @@ def main():
         market_questions.append(question)
         
         if not price_history:
-            print(f"⚠️ No price history for market: {question}")
+            print(f"No price history for market: {question}")
             continue
         
-        print(f"\n🕒 Historical Prices for: {question}")
-        print(f"{'⏰ Timestamp (ET)':<25} | {'💵 Price':>10}")
+        print(f"\nHistorical Prices for: {question}")
+        print(f"{'Timestamp (ET)':<25} | {'Price':>10}")
         print("─" * 40)
         
         for data_point in price_history:
@@ -129,7 +129,7 @@ def main():
     if combined_data:
         export_combined_csv(OUTPUT_FILENAME, combined_data, market_questions)
     else:
-        print("❌ No data collected for CSV export.")
+        print("No data collected for CSV export.")
 
 if __name__ == "__main__":
     main()
